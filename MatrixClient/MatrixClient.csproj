@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net47</TargetFrameworks>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net47'">
+    <DefineConstants>NET45</DefineConstants>    
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net47'">
+    <Reference Include="System.Runtime.Caching" />  
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="6.2.2" />
+    <PackageReference Include="LiteDB" Version="4.1.1" />
+    <PackageReference Include="Matrix.vNext" Version="2.0.0-ci-18059-2" />
+    <PackageReference Include="Matrix.vNext.Extensions" Version="2.0.0-ci-18059-2" />
+    <PackageReference Include="Matrix.vNext.Srv" Version="2.0.0-ci-18059-2" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.0.0" />
+    <PackageReference Include="morelinq" Version="2.10.0" />
+    <PackageReference Include="Polly" Version="5.8.0" />
+    <PackageReference Include="Polly.Caching.MemoryCache" Version="1.0.0" />
+    <PackageReference Include="reactiveui" Version="8.0.0-alpha0117" />
+    <PackageReference Include="System.Security.SecureString" Version="4.3.0" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,280 @@
+﻿<local:BaseWindow x:Class="MatrixClient.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:MatrixClient.ViewModel;assembly=MatrixClient"
+        xmlns:local="clr-namespace:MatrixClient"
+        xmlns:controls="clr-namespace:MatrixClient.Controls"
+        xmlns:converters="clr-namespace:MatrixClient.Converters"
+        mc:Ignorable="d"
+        Title="MatriX Client" Height="600" Width="800"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}">
+
+
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="bool2VisibilityConverter" />
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="220"/>
+            <ColumnDefinition Width="*"/>
+            <!-- increase with once we need the 3rd column-->
+            <ColumnDefinition Width="0"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- left panel -->
+        <Grid Grid.Column="0">
+            <Grid.Background>
+                <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlLightColorKey}}"/>
+            </Grid.Background>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="44"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <local:AccountMenu/>
+
+            <ListBox Grid.Row="1" ItemsSource="{Binding MyViewModel.SortedMenuItems}" x:Name="listNav"
+                     HorizontalContentAlignment="Stretch"
+                     SelectedItem="{Binding Path=MyViewModel.SelectedChat}"
+                     ItemContainerStyle="{DynamicResource lbDefaultItemContainerStyle}"
+                     BorderThickness="0"
+                     Background="Transparent"
+                     >
+
+                <!--<ListBox.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListBoxItem}">
+                        <Setter Property="Focusable" Value="{Binding Focusable}"/>
+                       
+                    </Style>
+                </ListBox.ItemContainerStyle>-->
+
+
+                <!--<ListBox.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListBoxItem}">
+                        <Setter Property="Focusable" Value="{Binding Focusable}"/>
+                        
+                    </Style>
+                  
+                </ListBox.ItemContainerStyle>-->
+
+                <ListBox.Resources>
+
+                    <DataTemplate DataType="{x:Type vm:RoomsHeaderItem}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Column="0" Text="{Binding Text}" Style="{StaticResource tbh2}"/>
+                            <controls:PlusButton
+                                Height="16" Width="16"
+                                Grid.Column="1"
+                                Command="{Binding Path=MyViewModel.ShowJoinRoom, RelativeSource={RelativeSource AncestorType=Window}}"/>
+                        </Grid>
+                    </DataTemplate>
+
+                    <DataTemplate DataType="{x:Type vm:ChatsHeaderItem}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Column="0" Text="{Binding Text}" Style="{StaticResource tbh2}"/>
+                            <controls:PlusButton Height="16" Width="16"                                         
+                                                 Grid.Column="1" 
+                                                 Command="{Binding Path=MyViewModel.ShowContacts, RelativeSource={RelativeSource AncestorType=Window}}" />
+                        </Grid>
+                    </DataTemplate>
+
+                    <DataTemplate DataType="{x:Type vm:ChatItem}">
+                        <!--<DataTemplate.Resources>
+                            <converters:StatusColorConverter x:Key="StatusColorConverter"/>
+                        </DataTemplate.Resources>-->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="15" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <Border HorizontalAlignment="Left" Grid.Column="0" BorderThickness="0" CornerRadius="5" Width="10" Height="10"                                    
+                                    Background="{Binding Converter={StaticResource StatusColorConverter}, Path=Contact.OnlineStatus}"
+                                    VerticalAlignment="Center"/>
+
+                            <TextBlock Grid.Column="1" Text="{Binding Text}" Style="{StaticResource textblock2}" VerticalAlignment="Center"/>
+                            <!-- TODO, add unread counter -->
+                            <TextBlock Grid.Column="2" Text="{Binding CountUnread}" Margin="0,0,5,0" VerticalAlignment="Center"
+                                       Visibility="Collapsed">
+                                <TextBlock.Foreground>
+                                    <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.GrayTextColorKey}}"/>
+                                </TextBlock.Foreground>
+                            </TextBlock>
+
+                            <!--Content="X"-->
+                            <controls:CrossButton                                           
+                                        Grid.Column="3"
+                                        Height="14" Width="14"
+                                        Command="{Binding Path=MyViewModel.CloseChat, RelativeSource={RelativeSource AncestorType=Window}}"
+                                        CommandParameter="{Binding}"
+                                        VerticalAlignment="Center">
+                                <Button.Style>
+                                    <Style TargetType="{x:Type Button}">
+                                        <Setter Property="Visibility" Value="Hidden" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type ListBoxItem}},Path=IsMouseOver}" Value="True">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                            </controls:CrossButton>
+
+                        </Grid>
+                    </DataTemplate>
+
+                    <DataTemplate  DataType="{x:Type vm:GroupChatItem}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="15" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Column="0" Text="#" Style="{StaticResource textblock2}" VerticalAlignment="Center"/>
+                            <TextBlock Grid.Column="1" Text="{Binding Text}" Style="{StaticResource textblock2}" VerticalAlignment="Center"/>
+                            <!-- TODO, add unread counter -->
+                            <TextBlock Grid.Column="2" Text="{Binding CountUnread}" Margin="0,0,5,0" VerticalAlignment="Center"
+                                       Visibility="Collapsed">
+                                <TextBlock.Foreground>
+                                    <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.GrayTextColorKey}}"/>
+                                </TextBlock.Foreground>
+                            </TextBlock>
+
+                            <!--Content="X"-->
+                            <controls:CrossButton                                           
+                                        Grid.Column="3"
+                                        Height="14" Width="14"
+                                        Command="{Binding Path=MyViewModel.CloseGroupChat, RelativeSource={RelativeSource AncestorType=Window}}"
+                                        CommandParameter="{Binding}"
+                                        VerticalAlignment="Center">
+                                <Button.Style>
+                                    <Style TargetType="{x:Type Button}">
+                                        <Setter Property="Visibility" Value="Hidden" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type ListBoxItem}},Path=IsMouseOver}" Value="True">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                            </controls:CrossButton>
+
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.Resources>
+            </ListBox>
+        </Grid>
+
+        <!-- middle column -->
+        <Grid Grid.Column="1">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- Action Bar -->
+                <local:ActionBar/>
+               
+                <!-- content pages (non chat) -->
+                <TabControl Grid.Row="1"
+                        x:Name="tabNoConversations"
+                        Visibility="{Binding Path=MyViewModel.ChatsVisible, Converter={StaticResource InvertedVisibilityConverter}}"
+                        SelectedIndex="{Binding Path=MyViewModel.SelectedPageIndex}">
+                    <TabControl.ItemContainerStyle>
+                        <!--
+                            This style hides the tab strips, 
+                            we use the tab control only as a containers for all the conversations 
+                        -->
+                        <Style TargetType="{x:Type TabItem}">
+                            <Setter Property="Visibility"  Value="Collapsed" />
+                        </Style>
+                    </TabControl.ItemContainerStyle>
+
+                    <TabControl.Items>
+                        <TabItem>
+                            <local:LoginPage/>
+                        </TabItem>
+
+                        <TabItem>
+                            <local:ContactsPage/>
+                        </TabItem>
+
+                        <TabItem>
+                            <local:JoinRoomPage/>
+                        </TabItem>
+
+                        <TabItem>
+                            <local:AddContactPage/>
+                        </TabItem>
+                        
+                        <TabItem>
+                            <local:ProfilePage/>
+                        </TabItem>
+                    </TabControl.Items>
+                </TabControl>
+
+                <!--- chats -->
+                <controls:TabControlEx Grid.Row="1"               
+                    ItemsSource="{Binding Path=MyViewModel.Conversations}"
+                    Visibility="{Binding Path=MyViewModel.ChatsVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
+                    x:Name="tabConversations" 
+                    SelectedItem="{Binding Path=MyViewModel.SelectedChat, Mode=OneWay}">
+
+                    <TabControl.Resources>
+                        <DataTemplate  DataType="{x:Type vm:ChatItem}" >                           
+                            <local:ChatPanel x:Name="ChatPanel" />
+                        </DataTemplate>
+
+                        <DataTemplate  DataType="{x:Type vm:GroupChatItem}">                            
+                            <local:GroupChatPanel />
+                        </DataTemplate>
+                    </TabControl.Resources>
+                    <TabControl.ItemContainerStyle>
+
+                        <!--This style hides the tab strips, 
+                        we use the tab control only as a containers for all the conversations-->
+
+                        <Style TargetType="{x:Type TabItem}">
+                            <Setter Property="Visibility"  Value="Collapsed" />
+                        </Style>
+
+                    </TabControl.ItemContainerStyle>
+                    <!--<TabControl.ItemContainerStyle>
+                    <Style TargetType="TabItem">
+                        <Setter Property="Content" Value="{Binding}" />
+                    </Style>
+                </TabControl.ItemContainerStyle>-->
+                    <TabControl.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Path=Jid}" />
+                        </DataTemplate>
+                    </TabControl.ItemTemplate>
+
+                </controls:TabControlEx>
+            </Grid>
+        </Grid>
+
+        <!-- right column -->
+        <Grid Grid.Column="2">
+
+        </Grid>
+    </Grid>
+</local:BaseWindow>

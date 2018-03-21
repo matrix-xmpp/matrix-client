@@ -1,0 +1,223 @@
+﻿<UserControl x:Class="MatrixClient.ChatPanel"            
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MatrixClient"
+             xmlns:vm="clr-namespace:MatrixClient.ViewModel;assembly=MatrixClient"             
+             xmlns:converters="clr-namespace:MatrixClient.Converters"
+             xmlns:behaviors="clr-namespace:MatrixClient.Behaviors"
+             xmlns:controls="clr-namespace:MatrixClient.Controls"
+             xmlns:fa="http://schemas.fontawesome.io/icons/"
+             xmlns:gl="clr-namespace:System.Globalization;assembly=mscorlib"
+             mc:Ignorable="d"              
+             d:DesignHeight="300" d:DesignWidth="300">
+
+    <UserControl.Resources>
+        <converters:StatusColorConverter x:Key="StatusColorConverter"/>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Border HorizontalAlignment="Left" Grid.Column="0" BorderThickness="0" CornerRadius="5" Width="10" Height="10"                                    
+                                    Background="{Binding Converter={StaticResource StatusColorConverter}, Path=Contact.OnlineStatus}"/>
+
+            <TextBlock Grid.Column="1" Text="{Binding Path=Contact.Name}" Style="{StaticResource textblock2}" Margin="5,0,0,0"/>
+            <TextBlock Grid.Column="2" Text="{Binding Path=Contact.StatusText}" Style="{StaticResource textblock3gray}" FontStyle="Italic" Margin="5,0,0,0" />
+        </Grid>
+
+        <ListBox Grid.Row="1"
+                 x:Name="listMessages"                  
+                 Visibility="Visible"
+                 ItemsSource="{Binding Messages}"
+                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                 BorderThickness="0">
+            <ListBox.Resources>                
+                <DataTemplate DataType="{x:Type vm:Message}">                    
+                    <Grid>                      
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="48" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>                           
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+             
+                        <StackPanel x:Name="panelAvatarBuddy" Grid.Column="0" Grid.Row="0"
+                                    Visibility="{Binding Path=IsSelf, Converter={StaticResource InvertedVisibilityConverter}}">
+                            <Image 
+                                x:Name="imageAvatarBuddy"
+                                VerticalAlignment="Top"
+                                Width="40" Height="40" HorizontalAlignment="Left">
+
+                                <Image.Visibility>
+                                    <MultiBinding Converter="{StaticResource MultiBooleanToVisibilityConverter}">
+                                        <Binding Path="IsSelf" Converter="{StaticResource BooleanInverterConverter}"/>
+                                        <Binding Path="IsSelf" RelativeSource="{RelativeSource PreviousData}"/>
+                                    </MultiBinding>
+                                </Image.Visibility>
+                                <Image.Style>
+                                    <Style TargetType="{x:Type Image}">
+                                        <Setter Property="Source" Value="{Binding Path=DataContext.Contact.AvatarBytes, Converter={StaticResource ByteArrayToBitmapImageConverter}, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Path=DataContext.Contact.AvatarBytes, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" Value="{x:Null}">
+                                                <Setter Property="Source" Value="{Binding Path=DataContext.Contact.Name, Converter={StaticResource NameToAvatarConverter} ,RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>                                   
+                                </Image.Style>
+                            </Image>
+                        </StackPanel>
+
+                        <!-- our avatar -->
+                        <StackPanel x:Name="panelAvatarSelf" Grid.Column="0" Grid.Row="0"
+                                    Visibility="{Binding Path=IsSelf, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <Image     
+                                x:Name="imageAvatarSelf"
+                                VerticalAlignment="Top"
+                                Width="40" Height="40" HorizontalAlignment="Left">
+                                <Image.Visibility>
+                                    <MultiBinding Converter="{StaticResource MultiBooleanToVisibilityConverter}">
+                                        <Binding Path="IsSelf" />
+                                        <Binding Path="IsSelf" RelativeSource="{RelativeSource PreviousData}" Converter="{StaticResource BooleanInverterConverter}"/>
+                                    </MultiBinding>
+                                </Image.Visibility>
+                                <Image.Style>
+                                    <Style TargetType="{x:Type Image}">
+                                        <Setter Property="Source" Value="{Binding Account.AvatarBytes, Converter={StaticResource ByteArrayToBitmapImageConverter}, RelativeSource={RelativeSource AncestorType=Window}}" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Account.AvatarBytes, RelativeSource={RelativeSource AncestorType=Window}}" Value="{x:Null}">
+                                                <Setter Property="Source" Value="{Binding Account.Nickname, Converter={StaticResource NameToAvatarConverter}, RelativeSource={RelativeSource AncestorType=Window}}" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Image.Style>
+                            </Image>                           
+                        </StackPanel>
+
+                        <StackPanel Visibility="{Binding Path=Visibility, ElementName=panelAvatarBuddy}">
+                            <TextBlock x:Name="txtTimeStampBuddy" Foreground="Transparent" 
+                                       VerticalAlignment="Center"
+                                       Text="{Binding TimeStamp, StringFormat=t, ConverterCulture={x:Static gl:CultureInfo.CurrentCulture}}" 
+                                       Style="{StaticResource textblock4gray}" 
+                                       Visibility="{Binding Path=Visibility, ElementName=imageAvatarBuddy, Converter={StaticResource VisibilityInverterConverter}}"/>
+                        </StackPanel>
+
+                        <StackPanel Visibility="{Binding Path=Visibility, ElementName=panelAvatarSelf}">
+                            <TextBlock x:Name="txtTimeStampSelf" Foreground="Transparent" 
+                                       VerticalAlignment="Center"
+                                       Text="{Binding TimeStamp, StringFormat=t, ConverterCulture={x:Static gl:CultureInfo.CurrentCulture}}" 
+                                       Style="{StaticResource textblock4gray}" 
+                                       Visibility="{Binding Path=Visibility, ElementName=imageAvatarSelf, Converter={StaticResource VisibilityInverterConverter}}"/>
+                        </StackPanel>
+
+                        <Grid Grid.Column="1" Grid.Row="0" >
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <StackPanel Grid.Row="0" Visibility="{Binding Path=Visibility, ElementName=panelAvatarBuddy}" Orientation="Horizontal">
+                                <TextBlock Style="{StaticResource textblock2}" Visibility="{Binding Path=Visibility, ElementName=imageAvatarBuddy}"
+                                           Text="{Binding Nickname}" FontWeight="Bold"/>
+
+                                <TextBlock Visibility="{Binding Path=Visibility, ElementName=imageAvatarBuddy}"
+                                           Margin="10,0,0,0" Style="{StaticResource textblock4gray}"
+                                           VerticalAlignment="Center">
+                                    <fa:FontAwesome Icon="ClockOutline"/>
+                                </TextBlock>
+                                <TextBlock Visibility="{Binding Path=Visibility, ElementName=imageAvatarBuddy}"
+                                           Margin="5,0,0,0" VerticalAlignment="Center"
+                                            Text="{Binding TimeStamp, StringFormat=t, ConverterCulture={x:Static gl:CultureInfo.CurrentCulture}}"
+                                           Style="{StaticResource textblock3gray}"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Row="0" Visibility="{Binding Path=Visibility, ElementName=panelAvatarSelf}" Orientation="Horizontal">
+                                <TextBlock Style="{StaticResource textblock2}" Visibility="{Binding Path=Visibility, ElementName=imageAvatarSelf}"
+                                           Text="{Binding Nickname}" FontWeight="Bold"/>
+
+                                <TextBlock Visibility="{Binding Path=Visibility, ElementName=imageAvatarSelf}"
+                                           Margin="10,0,0,0" Style="{StaticResource textblock4gray}"
+                                           VerticalAlignment="Center">
+                                    <fa:FontAwesome Icon="ClockOutline"/>                                    
+                                </TextBlock>    
+                                <TextBlock Visibility="{Binding Path=Visibility, ElementName=imageAvatarSelf}"
+                                           Margin="5,0,0,0" VerticalAlignment="Center"
+                                           Text="{Binding TimeStamp, StringFormat=t, ConverterCulture={x:Static gl:CultureInfo.CurrentCulture}}"
+                                           Style="{StaticResource textblock4gray}"/>
+                            </StackPanel>
+                            
+                            <controls:SelectableTextBlock Grid.Row="1" Style="{StaticResource textblock3}" TextWrapping="Wrap">
+                                <Run Text="{Binding Text}" />
+                            </controls:SelectableTextBlock>
+                        </Grid>                       
+
+                    </Grid>
+
+                    <DataTemplate.Triggers>
+                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource TemplatedParent},Path=IsMouseOver}" Value="True">
+                            <Setter TargetName="txtTimeStampBuddy" Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                            <Setter TargetName="txtTimeStampSelf" Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource TemplatedParent},Path=IsMouseOver}" Value="False">
+                            <Setter TargetName="txtTimeStampBuddy" Property="Foreground" Value="Transparent"/>
+                            <Setter TargetName="txtTimeStampSelf" Property="Foreground" Value="Transparent"/>
+                        </DataTrigger>
+                    </DataTemplate.Triggers>
+                </DataTemplate>
+            </ListBox.Resources>
+        </ListBox>
+
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <controls:ChatTextBox
+                MaxHeight="100" 
+                Grid.Column="0"
+                HorizontalAlignment="Stretch" 
+                VerticalAlignment="Stretch"
+                TextWrapping="Wrap" AcceptsReturn="True"
+                Text="{Binding Path=ComposeMessage, UpdateSourceTrigger=PropertyChanged}"
+                Command="{Binding Path=MyViewModel.SendChat, RelativeSource={RelativeSource AncestorType=Window}}"
+                CommandParameter="{Binding}"              
+                Style="{StaticResource textbox2}">
+                <controls:WatermarkService.Watermark>
+                    <TextBlock Margin="5,0,0,0" Style="{StaticResource textblock2}">
+                        <fa:FontAwesome Icon="KeyboardOutline"/>
+                        <TextBlock>type your message here...</TextBlock>
+                    </TextBlock>
+                </controls:WatermarkService.Watermark>
+            </controls:ChatTextBox>
+
+            <Button              
+                Margin="0"
+                Width="60"
+                Height="Auto"
+                Grid.Column="1" Content="Send" Style="{StaticResource buttonPrimary}"
+                Command="{Binding Path=MyViewModel.SendChat, RelativeSource={RelativeSource AncestorType=Window}}"
+                CommandParameter="{Binding}"
+                behaviors:FocusOnClickBehavior.ElementToFocus="{Binding RelativeSource={RelativeSource Self}}">
+            </Button>
+
+
+        </Grid>
+
+    </Grid>
+</UserControl>

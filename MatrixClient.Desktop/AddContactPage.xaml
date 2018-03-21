@@ -1,0 +1,78 @@
+﻿<UserControl x:Class="MatrixClient.AddContactPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MatrixClient"
+             xmlns:controls="clr-namespace:MatrixClient.Controls"
+             xmlns:converters="clr-namespace:MatrixClient.Converters"
+             xmlns:fa="http://schemas.fontawesome.io/icons/"
+             xmlns:rg="clr-namespace:SourceChord.GridExtra;assembly=GridExtra.Wpf"
+             mc:Ignorable="d" 
+             d:DesignHeight="500" d:DesignWidth="500"
+             DataContext="{Binding RelativeSource={RelativeSource Self}}">
+    <Grid>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <rg:ResponsiveGrid Margin="20">
+                <TextBlock rg:ResponsiveGrid.XS="12" Text="Add Contact" Style="{StaticResource textblockheader}"/>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <!--<ColumnDefinition Width="Auto"/>-->
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Text="Xmpp Id" Style="{StaticResource textblocktitle}" Grid.Row="0"/>
+                    <TextBox Text="{Binding AddUser.XmppId, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Style="{StaticResource textboxinput}">
+                        <controls:WatermarkService.Watermark>
+                            <TextBlock Margin="5,0,0,0" Style="{StaticResource textblock2}">
+                        <fa:FontAwesome Icon="UserPlus"/>
+                        <TextBlock>XMPP Id</TextBlock>
+                    </TextBlock>
+                        </controls:WatermarkService.Watermark>
+                    </TextBox>
+
+                    <TextBlock Text="Name" Style="{StaticResource textblocktitle}" Grid.Row="2"/>
+                    <TextBox Text="{Binding AddUser.Name, UpdateSourceTrigger=PropertyChanged}" Grid.Row="3" Style="{StaticResource textboxinput}">
+                        <controls:WatermarkService.Watermark>
+                            <TextBlock Margin="5,0,0,0" Style="{StaticResource textblock2}">
+                        <fa:FontAwesome Icon="User"/>
+                        <TextBlock>optional name</TextBlock>
+                    </TextBlock>
+                        </controls:WatermarkService.Watermark>
+                    </TextBox>
+
+                    <TextBlock Text="Message" Style="{StaticResource textblocktitle}" Grid.Row="4"/>
+                    <TextBox Text="{Binding AddUser.Message, UpdateSourceTrigger=PropertyChanged}" Grid.Row="5" Style="{StaticResource textboxinput}"
+                     TextWrapping="Wrap" AcceptsReturn="True" Height="70" VerticalScrollBarVisibility="Auto">
+                        <controls:WatermarkService.Watermark>
+                            <TextBlock Margin="5,0,0,0" Style="{StaticResource textblock2}">
+                        <fa:FontAwesome Icon="Envelope"/>
+                        <TextBlock>optional message to the user</TextBlock>
+                    </TextBlock>
+                        </controls:WatermarkService.Watermark>
+                    </TextBox>
+
+
+
+                </Grid>
+
+                <StackPanel rg:ResponsiveGrid.XS="12" Margin="0,20,0,0"  Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Width="100" Content="Add"
+                        Style="{StaticResource buttonPrimary}"
+                        Command="{Binding RosterCommands.AddContact}" 
+                        CommandParameter="{Binding AddUser}"
+                        />
+                </StackPanel>
+            </rg:ResponsiveGrid>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

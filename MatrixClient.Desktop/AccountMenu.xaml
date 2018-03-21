@@ -1,0 +1,151 @@
+﻿<UserControl x:Class="MatrixClient.AccountMenu"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MatrixClient"
+             xmlns:status="clr-namespace:MatrixClient.ViewModel;assembly=MatrixClient"
+             xmlns:vm="clr-namespace:MatrixClient.ViewModel;assembly=MatrixClient"
+             mc:Ignorable="d" 
+             xmlns:fa="http://schemas.fontawesome.io/icons/"
+             d:DesignHeight="300" d:DesignWidth="300"
+             DataContext="{Binding RelativeSource={RelativeSource Self}}">    
+        <Menu>
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <UniformGrid Rows="1"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+       
+            <!--<ItemsControl.ItemContainerStyle>
+                    <Style TargetType="MenuItem">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="MenuItem">
+                                    <Border Background="Gold" BorderBrush="Black" BorderThickness="2" Margin="1" >
+                                        <ContentControl Content="{TemplateBinding Header}"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ItemsControl.ItemContainerStyle>-->
+        
+            
+            <MenuItem Cursor="Hand" Padding="0">            
+                <MenuItem.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="5"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+
+                        <Border Grid.Column="0" Grid.RowSpan="2" BorderThickness="5,0,0,0"
+                                    BorderBrush="{Binding Converter={StaticResource StatusColorConverter}, Path=Account.Presence.OnlineStatus}">
+                            <Image Width="40" Height="40">
+                                <Image.Style>
+                                    <Style TargetType="{x:Type Image}">
+                                        <Setter Property="Source" Value="{Binding Account.AvatarBytes, Converter={StaticResource ByteArrayToBitmapImageConverter}}" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Account.AvatarBytes}" Value="{x:Null}">
+                                                <Setter Property="Source" Value="{Binding Account.Nickname, Converter={StaticResource NameToAvatarConverter}}" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Image.Style>
+                            </Image>
+                        </Border>
+                        <TextBlock Text="{Binding Account.Nickname}" Grid.Row="0" Grid.Column="2" Style="{StaticResource textblock2}"/>
+                        <TextBlock Text="{Binding Account.Presence.StatusText}" Grid.Row="1" Grid.Column="2" Style="{StaticResource textblock3gray}"/>
+                    </Grid>             
+                </MenuItem.Header>
+
+            <MenuItem Header="Login" Command="{Binding MyViewModel.ShowLogin}">
+                <!--<MenuItem.Icon>
+                    <fa:ImageAwesome Icon="User"/>
+                </MenuItem.Icon>-->
+            </MenuItem>
+            <MenuItem Header="Add Contact" Command="{Binding MyViewModel.ShowAddContact}">
+                <MenuItem.Icon>
+                    <fa:ImageAwesome Icon="Plus"/>
+                </MenuItem.Icon>
+            </MenuItem>
+
+            <MenuItem Header="My Profile" Command="{Binding MyViewModel.ShowMyProfile}">
+                <MenuItem.Icon>
+                    <fa:ImageAwesome Icon="Vcard"/>
+                </MenuItem.Icon>
+            </MenuItem>
+
+
+            <MenuItem Header="Status">
+                    <MenuItem Header="online"
+                              Command="{Binding Commands.SetStatusCommand}"
+                              CommandParameter="{x:Static vm:OnlineStatus.Online}">
+                        <MenuItem.Icon>
+                            <Border BorderThickness="0" CornerRadius="5" Width="10" Height="10"                                    
+                                        Background="{StaticResource Online}"
+                                        VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="chat"
+                              Command="{Binding Commands.SetStatusCommand}"
+                              CommandParameter="{x:Static vm:OnlineStatus.Chat}">
+                        <MenuItem.Icon>
+                            <Border BorderThickness="0" CornerRadius="6" Width="12" Height="12"                                    
+                                        Background="{StaticResource Chat}"
+                                        VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="away"
+                              Command="{Binding Commands.SetStatusCommand}"
+                              CommandParameter="{x:Static vm:OnlineStatus.Away}">
+                        <MenuItem.Icon>
+                            <Border BorderThickness="0" CornerRadius="6" Width="12" Height="12"                                    
+                                        Background="{StaticResource Away}"
+                                        VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="extended away"
+                              Command="{Binding Commands.SetStatusCommand}"
+                              CommandParameter="{x:Static vm:OnlineStatus.ExtendedAway}">
+                        <MenuItem.Icon>
+                            <Border BorderThickness="0" CornerRadius="6" Width="12" Height="12"                                    
+                                        Background="{StaticResource ExtendedAway}"
+                                        VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="do not disturb"
+                              Command="{Binding Commands.SetStatusCommand}"
+                              CommandParameter="{x:Static vm:OnlineStatus.DoNotDisturb}">
+                        <MenuItem.Icon>
+                            <Border BorderThickness="0" CornerRadius="6" Width="12" Height="12"                                    
+                                        Background="{StaticResource DoNotDisturb}"
+                                        VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </MenuItem>
+
+            <Separator/>
+            <MenuItem Header="Debug Window" Command="{Binding DebugWindowCommand}"/>
+            <Separator/>
+            <MenuItem Header="About" Command="{Binding AboutCommand}">
+                <MenuItem.Icon>
+                    <fa:ImageAwesome Icon="Info"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <Separator/>
+            <MenuItem Header="Exit" Command="{Binding ExitCommand}">
+                <MenuItem.Icon>
+                    <fa:ImageAwesome Icon="SignOut"/>
+                </MenuItem.Icon>
+            </MenuItem>
+        </MenuItem>
+        </Menu>
+    
+</UserControl>

@@ -1,0 +1,79 @@
+﻿<Window x:Class="MatrixClient.About"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:controls="clr-namespace:MatrixClient.Controls"
+        mc:Ignorable="d"
+        Title="About" Height="293.636" Width="417.273" WindowStartupLocation="CenterOwner">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <Grid>
+            <TextBlock Text="MatriX Client"/>
+        </Grid>
+        <RichTextBox Grid.Row="1" IsReadOnly="True" IsDocumentEnabled="True">
+            <RichTextBox.Resources>
+                <Style TargetType="Hyperlink">
+                    <Setter Property="Cursor" Value="Hand" />                  
+                </Style>
+            </RichTextBox.Resources>
+            <FlowDocument>
+                <Paragraph>
+                    <TextBlock FontWeight="Bold">Open Source Components / Libraries</TextBlock>
+                    <LineBreak/>
+                    <TextBlock>           
+                        <controls:DefaultBrowserHyperlink NavigateUri="https://github.com/charri/Font-Awesome-WPF" >
+                            FontAwesome controls for WPF+UWP
+                        </controls:DefaultBrowserHyperlink>                           
+                        <TextBlock>MIT</TextBlock>
+                    </TextBlock>                    
+                    <LineBreak/>
+                    <TextBlock>           
+                        <controls:DefaultBrowserHyperlink NavigateUri="http://automapper.org/" >
+                            AutoMapper
+                        </controls:DefaultBrowserHyperlink>                           
+                        <TextBlock>MIT</TextBlock>
+                    </TextBlock>
+                    <LineBreak/>
+                    <TextBlock>           
+                        <controls:DefaultBrowserHyperlink NavigateUri="http://www.litedb.org/" >
+                            LiteDB
+                        </controls:DefaultBrowserHyperlink>   
+                        <TextBlock>Mauricio David</TextBlock>
+                        <TextBlock>MIT</TextBlock>
+                    </TextBlock>
+                    <LineBreak/>
+                    <TextBlock>           
+                        <controls:DefaultBrowserHyperlink NavigateUri="https://github.com/reactiveui/ReactiveUI" >
+                            ReactiveUI
+                        </controls:DefaultBrowserHyperlink>                        
+                        <TextBlock>MS-PL</TextBlock>
+                    </TextBlock>
+                    <LineBreak/>
+                    <TextBlock>           
+                        <controls:DefaultBrowserHyperlink NavigateUri="https://github.com/sourcechord/GridExtra" >
+                            GridExtra
+                        </controls:DefaultBrowserHyperlink>
+                        <TextBlock>sourcechord</TextBlock>
+                        <TextBlock>MIT</TextBlock>
+                    </TextBlock>
+                    <LineBreak/>
+                    <TextBlock>           
+                        <controls:DefaultBrowserHyperlink NavigateUri="https://github.com/JosePineiro/WebP-wrapper" >
+                           WebP-wrapper
+                        </controls:DefaultBrowserHyperlink>                           
+                        <TextBlock>Jose M. Piñeiro</TextBlock>
+                        <TextBlock>GPL-3.0</TextBlock>
+                    </TextBlock>
+                </Paragraph>
+               
+            </FlowDocument>
+           
+            
+        </RichTextBox>
+    </Grid>
+</Window>

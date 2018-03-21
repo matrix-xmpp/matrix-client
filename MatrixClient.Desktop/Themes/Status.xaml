@@ -1,0 +1,17 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:MatrixClient.Themes">
+
+    <!-- green -->
+    <SolidColorBrush x:Key='Online'>#FF2EA664</SolidColorBrush>
+    <!-- grey -->
+    <SolidColorBrush x:Key='Offline'>#ff999999</SolidColorBrush>
+    <!-- yellow -->
+    <SolidColorBrush x:Key='Chat'>#ffffff00</SolidColorBrush>
+    <!-- orange -->
+    <SolidColorBrush x:Key='Away'>#ffFFC300</SolidColorBrush>
+    <!-- orange -->
+    <SolidColorBrush x:Key='ExtendedAway'>#ffFFC300</SolidColorBrush>
+    <!-- red -->
+    <SolidColorBrush x:Key='DoNotDisturb'>#ffff0000</SolidColorBrush>
+</ResourceDictionary>

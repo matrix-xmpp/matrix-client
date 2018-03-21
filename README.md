@@ -1,20 +1,10 @@
 # Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
+This is a basic XMPP client which should serve as an example for our [MatriX vNext XMPP SDK](https://matrix-xmpp.io/)
 
-# Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
-
-# Build and Test
-TODO: Describe and show how to build your code and run the tests. 
-
-# Contribute
-TODO: Explain how other users and developers can contribute to make your code better. 
-
-If you want to learn more about creating good readme files then refer the following [guidelines](https://www.visualstudio.com/en-us/docs/git/create-a-readme). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
+# Screenshots
+![login](/screenshots/login.png?raw=true "Login")
+![Add User](/screenshots/add-user.png?raw=true "Add User")
+![Chat](/screenshots/chat.png?raw=true "Chat")
+![search in contacts](/screenshots/contacts-search.png?raw=true "Contact search")
+![user profile](/screenshots/my-profile.png?raw=true "User Profile")
+![subscription request](/screenshots/subscription-request.png?raw=true "Subscription Request")
